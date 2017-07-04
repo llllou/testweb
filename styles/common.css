@@ -1,0 +1,32 @@
+footer
+{
+	height: 360px;
+	width: 100%;
+	background-color: white;
+	margin-top: 20px;
+}
+.wave
+{
+	background-color: #eee;
+	width: 100%;
+	height: 60px;
+	position: relative;
+	overflow: hidden;
+}
+.wave-box
+{
+	width: 200%;
+	height: 60px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-size: 50%;
+}
+.wave-box.wave-box-up
+{
+	background: url("../img/wave_02.png")  0 0 ;
+}
+.wave-box.wave-box-down
+{
+		background:url("../img/wave_01.png")  0 0;
+}
