@@ -75,7 +75,7 @@ searchBtn.onclick=function searchClick(){
  		timer=setInterval(function(){
  			runCheck(count);
       count++;
-      if(count>3)count=0;
+      if(count>=$(".banner ul li").length)count=0;
  		},4000);
  		$(".banner ul li").on("click",function () {
  			count=$(this).index();
@@ -117,3 +117,4 @@ $("nav>.login>button").click(function() {
 		}
 	})
 });
+new tool.AsideBar

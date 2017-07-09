@@ -31,19 +31,34 @@ searchBtn.onclick=function(){
  			box.appendChild(detail);
  			box.appendChild(des);
  			box.appendChild(price);
- 			$(box).append("<button class='cart' id='detail-cart'>加入购物车</button> ");
+ 			$(box).append("<b class='icon-add'></b><input type='text' value='1'><b class='icon-minus'></b><button class='cart' id='detail-cart'>加入购物车</button> ");
  			img.src=response.data[0].goods_thumb;
  			des.innerHTML=response.data[0].goods_desc;
  			detail.innerHTML=response.data[0].goods_name;
  			price.innerHTML="&yen;"+response.data[0].price;
+			$(".detail .icon-add").click(function () {
+				var count = $(".detail div input").val();
+				count++;
+				if (count>=99)count = 99;
+				$(".detail div input").val(count);
+			});
+			$(".detail .icon-minus").click(function () {
+				var count = $(".detail div input").val();
+				count--;
+				if (count<1)count = 1;
+				$(".detail div input").val(count);
+			});
  			$(".cart").click(function () {
- 			tool.addCart(tool.getQueryString("goods_id").substr(1),1)
+ 			tool.addCart(tool.getQueryString("goods_id").substr(1),$(".detail div input").val())
  });
  		},
  		"error":function (message) {
  			console.log(message)
  		}}
- 	)
+ 	);
+	 new tool.AsideBar();
+	 new tool.Wave();
+	 tool.login();
  };
  new tool.ajax({
 	"url":cat,

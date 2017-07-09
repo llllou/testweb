@@ -23,7 +23,7 @@ new tool.ajax({
   "dataType":"json",
   "success":function(response){
     console.log(response);
-    var container=document.getElementsByTagName("ul")[0];
+    var container=document.getElementsByTagName("ul")[1];
     var item=document.getElementsByClassName("item")[0];
     if (response.data.length<=10){
        for (var i = 0; i < response.data.length; i++)
@@ -35,7 +35,7 @@ new tool.ajax({
     addText(itemName,"goods_name",response.data);
     addText(itemDetail,"goods_desc",response.data)}
 });
-var btn=document.getElementsByTagName("button")[0];
+var btn=document.getElementById("search-btn");
 var search=document.getElementsByName("search")[0];
 btn.onclick=function ()
 { tool.ajax(
@@ -50,3 +50,50 @@ btn.onclick=function ()
     "error":function (message){console.log(message)}
   }
 )};
+window.onload= function () {
+    if (localStorage.token) {
+        $("nav .login").css("display","none");
+        tool.logined();
+        $(".login-box button:eq(1)").click(function() {
+            $(".login").css("display","block");
+            localStorage.clear();
+            $("#userInfo").remove();
+        });
+    };
+    $("nav>.login>button").click(function(event) {
+        event=event||window.event;
+        $.ajax(
+            {
+                "url": "http://h6.duchengjiu.top/shop/api_user.php",
+                "dataType": "json",
+                "data": {
+                    "status": "login",
+                    "username": $(".login input:eq(0)").val(),
+                    "password": $(".login input:eq(1)").val()
+                },
+                "type": "POST",
+                success: function (response) {
+                    console.log(response)
+                    if (response.code === 1001) {
+                        alert(response.message)
+                    }
+                    else if (response.code == 0) {
+                        localStorage.setItem("token", response.data.token);
+                        localStorage.setItem("username", response.data.username);
+                        localStorage.setItem("avatar", response.data.avatar)
+                        localStorage.setItem("user_id", response.data.user_id)
+                        $("nav .login").css("display", "none");
+                        tool.logined();
+                        $(".login-box button:eq(1)").click(function () {
+                            console.log("cl")
+                            $(".login").css("display", "block");
+                            localStorage.clear();
+                            $("#userInfo").remove();
+                        });
+                    }
+                }
+            })
+    });
+    new tool.Wave();
+    new tool.AsideBar;
+}

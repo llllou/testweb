@@ -2,6 +2,7 @@ function itemGet () {
 	this.inti=function () {
 		$.get("http://h6.duchengjiu.top/shop/api_cart.php?token="+localStorage.token,function (response) {
 			for (var i = 0; i < response.data.length; i++) {
+				if (localStorage.checked.match(response.data[i].goods_id))continue;
 				var li=document.createElement("li");
 				$(li).html('<img src="'+response.data[i].goods_thumb+'" /><a class="item-name" href="detail.html?goods_id='+response.data[i].goods_id+'">'+response.data[i].goods_name+'</a><span class="item-num">'+response.data[i].goods_number+'</span><span class="item-price">'+response.data[i].goods_price+'</span><span class="all-price">'+response.data[i].goods_number*response.data[i].goods_price+'</span>')
 				$(".item-container").append(li);
@@ -13,13 +14,11 @@ function itemGet () {
 }
 function addressGet () {
 	$.get("http://h6.duchengjiu.top/shop/api_useraddress.php?status=add?token="+localStorage.token,function (response) {
-		var address=document.createElement("li");
-		console.log(response);
-		if(response.data){
-			address.innerHTML="<span>"+response.data.consignee+"<span>";
-			$(".address-container").append(address)	
+		for(var i = 0;i < response.data.length;i++){
+			var ads=document.createElement("li");
+			address.innerHTML="<span>"+response.data[i].consignee+"<span><span>"+response.data[i].address+"</span>";
+			$(".address-container").append(ads)
 		}
-			
 	})
 }
 //用于获取地址的函数

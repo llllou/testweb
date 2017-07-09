@@ -1,4 +1,4 @@
-var btn=document.getElementsByTagName("button")[0];
+var btn=document.getElementById("search-btn");
 var search=document.getElementsByName("search")[0];
 var searchBox=document.getElementsByClassName("search-box")[0];
 var page=document.getElementsByClassName("page")[0];
@@ -6,8 +6,8 @@ var num=null;
 window.onload=function(){
 	var good =tool.getQueryString("search_text");
 	console.log(good);
-	$.ajax(
-	{
+	$.ajax
+	({
 		"url":goods+"?search_text"+good,
 		"type":"GET",
 		"dataType":"json",
@@ -28,8 +28,10 @@ window.onload=function(){
 			build(response);
 		},
 		"error":function (message){console.log(message)}
-	}
-)
+	});
+	new tool.Wave();
+	new tool.AsideBar();
+	tool.login();
 }
 btn.onclick=function ()
 {	$.ajax(
@@ -65,6 +67,7 @@ btn.onclick=function ()
 		"error":function (message){console.log(message)}
 	}
 )};
+//创建列表
 function build(response){for (var i = (num-1)*5; i < num*5; i++) {
 				if (!response.data[i]) {return};
 				var box =document.createElement("div");

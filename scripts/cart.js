@@ -16,6 +16,22 @@ cartItem.prototype.inti = function () {
 		$(li).find("img").attr("src",this.imgSrc)
 	}
 window.onload=function () {
+	tool.login();
+	new tool.Wave();
+	var search =document.getElementsByName("search")[0];
+	var searchBtn = document.getElementById("search-btn");
+	searchBtn.onclick=function searchClick(){
+		tool.ajax ({
+			"url":goods+"?search_text="+search.value,
+			"type":"GET",
+			"dataType":"json",
+			"success":function(response){
+				console.log(response);
+				location.href="search.html?search_text="+search.value
+			},
+			"error":function(message){console.log(message)}
+		})
+	};
 	$.ajax(
 		{
 			"url":"http://h6.duchengjiu.top/shop/api_cart.php?token="+localStorage.token,
@@ -26,10 +42,12 @@ window.onload=function () {
 					new cartItem(response.data[i].goods_thumb,response.data[i].goods_name,response.data[i].goods_number,response.data[i].goods_price,response.data[i].goods_id)	
 				}	
 				allprice();
+				//选择全部
 				$("#all-check").click(function(){
 					$("article ul li .cart-check").trigger('click');
 					allprice();
 				});
+				//删除商品
 				$("article ul li button").click(function () {
 					var id=$(this).parent().get();
 					$.ajax({
@@ -51,6 +69,7 @@ window.onload=function () {
 						$(box[i]).trigger("click")
 					};				
 				});
+				//改变商品数量
 				$("article ul li").click(function (event){	
 					event=event||window.event;
 					target=event.target||event.srcElement;
@@ -67,7 +86,19 @@ window.onload=function () {
 						$(this).find('span').text(this.price*carNum);
 						updateCart(cartId,carNum);
 					}
-					
+				});
+				$(".cart-check").click(
+					function(){allprice()}
+				);
+				$("article h2 a").click(function(event){
+					event.preventDefault();
+					localStorage.checked="";
+					var arr=$(".cart-check:checked").parent().get();
+					for (var i = 0;i < arr.length;i++)
+					{
+						localStorage.checked+="/"+arr[i].goods_id;
+					};
+					location.assign("order.html")
 				})
 			}
 		})
@@ -83,7 +114,7 @@ function updateCart (goods_id,carNum) {
 	allprice();
 }
 function allprice () {
-	var all=$("article ul li span").get();
+	var all=$("article ul li .cart-check:checked").siblings("span").get();
 	var allVal=0;
 	for (var i = 0; i < all.length; i++) {
 		allVal+=parseInt(all[i].innerText,10);

@@ -76,7 +76,7 @@ tool={
     $.post("http://h6.duchengjiu.top/shop/api_cart.php?token="+localStorage.token,
       {"goods_id":goods_id,
         "number":number},function (message) {
-         console.log(message)
+         alert("加入购物车成功");
         })    
   },
   //创建订单对话框
@@ -88,18 +88,84 @@ tool={
       $(".wave .wave-box-up").animate({
       "left": "-1349px"},
       10000, function() {
-      $(".wave div").css({"left":"0"});
+      $(".wave .wave-box-up").animate({"left":"0"},10000);
       waveUp();
       });
     })();
     (function waveDown () {
-      console.log($(".wave div").width())
       $(".wave .wave-box-down").animate({
       "left": "-1349px"},6000, function() {
-      $(".wave div").css({"left":"0"});
+      $(".wave .wave-box-down").animate({"left":"0"},6000);
       waveDown();
       })
     })();  
+  },
+  AsideBar:function () {
+    init();
+    $(".float-bar button").click(function(event) {
+      $("body").scrollTop(0);
+    });
+    $(".float-bar a").on("mouseover",function () {
+      $(".float-bar a").text("购物车")
+    });
+    $(".float-bar a").on("mouseout",function () {
+      $(".float-bar a").text("")
+    })
+    $(window).scroll(function (event) {
+      event=event||window.event;
+      if($("body").scrollTop()>=100){$(".float-bar").css({"display":"block"})}
+      else{$(".float-bar").css({"display":"none"})}
+    });
+    function init (){
+      var bar = document.createElement("div");
+      $(bar).html("<button>返回顶部</button><a href=cart.html></a>")
+      $("body").append(bar).find(bar).addClass("float-bar");
+    }
+  },
+  login:function (){
+    if (localStorage.token) {
+      $("nav .login").css("display","none");
+      tool.logined();
+      $(".login-box button:eq(1)").click(function() {
+        console.log("cl")
+        $(".login").css("display","block");
+        localStorage.clear();
+        $("#userInfo").remove();
+      })
+    };
+    $("nav>.login>button").click(function() {
+      $.ajax(
+        {
+          "url": "http://h6.duchengjiu.top/shop/api_user.php",
+          "dataType": "json",
+          "data": {
+            "status": "login",
+            "username": $(".login input:eq(0)").val(),
+            "password": $(".login input:eq(1)").val()
+          },
+          "type": "POST",
+          success: function (response) {
+            console.log(response)
+            if (response.code === 1001) {
+              alert(response.message)
+            }
+            else if (response.code == 0) {
+              localStorage.setItem("token", response.data.token);
+              localStorage.setItem("username", response.data.username);
+              localStorage.setItem("avatar", response.data.avatar)
+              localStorage.setItem("user_id", response.data.user_id)
+              $("nav .login").css("display", "none");
+              tool.logined();
+              $(".login-box button:eq(1)").click(function () {
+                console.log("cl")
+                $(".login").css("display", "block");
+                localStorage.clear();
+                $("#userInfo").remove();
+              });
+            }
+          }
+        })
+    })
   }
 }
 var cat='http://h6.duchengjiu.top/shop/api_cat.php';
